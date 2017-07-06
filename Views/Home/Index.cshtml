@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Créer les listes déroulantes</h2>
+        <ul>
+            <li>@Html.ActionLink("Rayon", "Index", "Rayons")</li>
+            <li>@Html.ActionLink("Categories", "Index", "Categories")</li>
+            <li>@Html.ActionLink("Saison", "Index", "Saisons")</li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>Ajouter des ingrédients</h2>
+        <ul>
+            <li>@Html.ActionLink("Ingrédients", "Index", "Ingredients")</li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>Ajouter mes recettes</h2>
+        <ul>
+            <li>@Html.ActionLink("Recette", "Index", "Recettes")</li>
+            <li>@Html.ActionLink("Détails", "Index", "RecetteDetails")</li>
+        </ul>
+    </div>
+</div>
