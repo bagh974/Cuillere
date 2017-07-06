@@ -15,9 +15,34 @@ namespace Cuillere.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recettes
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.RecetteSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.SaisonSortParm = sortOrder == "Saison" ? "saison_desc" : "Saison";
+            ViewBag.CategorySortParm = sortOrder == "Catégorie" ? "category_desc" : "Catégorie";
             var recettes = db.Recettes.Include(r => r.Category).Include(r => r.Saison);
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    recettes = recettes.OrderByDescending(s => s.Name);
+                    break;
+                case "Saison":
+                    recettes = recettes.OrderBy(s => s.Saison.Name);
+                    break;
+                case "saison_desc":
+                    recettes = recettes.OrderByDescending(s => s.Saison.Name);
+                    break;
+                case "Catégorie":
+                    recettes = recettes.OrderBy(s => s.Category.Name);
+                    break;
+                case "category_desc":
+                    recettes = recettes.OrderByDescending(s => s.Category.Name);
+                    break;
+                default:
+                    recettes = recettes.OrderBy(s => s.Name);
+                    break;
+            }
+            
             return View(recettes.ToList());
         }
 
