@@ -67,6 +67,7 @@ namespace Cuillere.Models
         pince
     }
 
+    //Pour ajouter les ingrédients de la recette
     public class RecetteDetail
     {
         public int RecetteDetailId { get; set; }
@@ -99,6 +100,7 @@ namespace Cuillere.Models
         public List<Recette> Recettes { get; set; }
     }
 
+    //Ma liste de courses
     public class Order
     {
         [Key]
@@ -107,6 +109,7 @@ namespace Cuillere.Models
         public List<OrderDetail> OrderDetail { get; set; }
     }
 
+    //Liste de courses détaillée
     public class OrderDetail
     {
         public int OrderDetailId { get; set; }
@@ -122,15 +125,18 @@ namespace Cuillere.Models
         public virtual Order Order { get; set; }
     }
 
+    //Elément de ma liste de courses
     public class CartItem
     {
         [Key]
         public int CartItemId { get; set; }
-
+        [DataType(DataType.DateTime)]
+        public DateTime DateCreated { get; set; }
         [Required]
         public string CartId { get; set; }
         public int IngredientId { get; set; }
         public int Count { get; set; }
+        public Unit unite { get; set; }
 
         public virtual Ingredient Ingredient { get; set; }
     }
