@@ -1,24 +1,33 @@
-﻿@model IEnumerable<Cuillere.Models.Recette>
+﻿@model PagedList.IPagedList<Cuillere.Models.Recette>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Mes recettes";
 }
 
-<h2>Index</h2>
+<h2>Mes recettes</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Nouvelle recette", "Create")
 </p>
+@using (Html.BeginForm("Index", "Recettes", FormMethod.Get))
+{
+    <p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Chercher" />
+    </p>
+}
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Recette", "Index", new { sortOrder = ViewBag.RecetteSortParm })
+            @Html.ActionLink("Recette", "Index", new { sortOrder = ViewBag.RecetteSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Catégorie", "Index", new { sortOrder = ViewBag.CategorySortParm })
+            @Html.ActionLink("Catégorie", "Index", new { sortOrder = ViewBag.CategorySortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Saison", "Index", new { sortOrder = ViewBag.SaisonSortParm })
+            @Html.ActionLink("Saison", "Index", new { sortOrder = ViewBag.SaisonSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
@@ -43,3 +52,8 @@
 }
 
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
+using PagedList;
 using System.Web.Mvc;
 using Cuillere.Models;
 
@@ -15,12 +15,33 @@ namespace Cuillere.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recettes
-        public ActionResult Index(string sortOrder)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
             ViewBag.RecetteSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.SaisonSortParm = sortOrder == "Saison" ? "saison_desc" : "Saison";
             ViewBag.CategorySortParm = sortOrder == "Catégorie" ? "category_desc" : "Catégorie";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
             var recettes = db.Recettes.Include(r => r.Category).Include(r => r.Saison);
+
+            //Recherche sur recette, saison ou catégorie
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recettes = recettes.Where(s => s.Name.Contains(searchString)
+                                       || s.Saison.Name.Contains(searchString)
+                                       || s.Category.Name.Contains(searchString));
+            }
+
             switch (sortOrder)
             {
                 case "name_desc":
@@ -42,8 +63,10 @@ namespace Cuillere.Controllers
                     recettes = recettes.OrderBy(s => s.Name);
                     break;
             }
-            
-            return View(recettes.ToList());
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(recettes.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Recettes/Details/5
