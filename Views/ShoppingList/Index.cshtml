@@ -12,22 +12,21 @@
 </div>
 @if (Model.CartItems.Count == 0)
 {
-    <a class="btn-danger" href="~/StoreFront/Index/1">La liste est vide, poursuivre---></a>
+    <a class="btn-danger" href="~/Recettes/Index">La liste est vide, poursuivre---></a>
 }
 else
 {
     <table class="table-responsive table-bordered table-striped">
         <tr>
             <th>
-                Product Name
+                Ingrédient
             </th>
             <th>
-                Quantity
+                Quantité
             </th>
             <th>
                 Unité
             </th>
-            <th>Sub-total</th>
             <th></th>
         </tr>
         @foreach (var item in Model.CartItems)
@@ -41,9 +40,6 @@ else
                 </td>
                 <td>
                     @item.unite
-                </td>
-                <td>
-                    @((item.Count).ToString())
                 </td>
                 <td>
                     <a href="" class="RemoveLink" data-id="@item.IngredientId">
