@@ -174,6 +174,32 @@ namespace Cuillere.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult MyCart(int? item, int count, Unit unite)
+        {
+            if(item == null)
+            {
+                return View();
+            }
+            List<CartItem> TempCartItem = new List<CartItem>()
+            {
+                new CartItem()
+                {
+                    DateCreated = DateTime.Today,
+                    IngredientId = (int)item,
+                    Count = count,
+                    unite = unite
+                }
+            };
+            //if (ModelState.IsValid)
+            //{
+            //    db.CartItems.Add(TempCartItem);
+            //    db.SaveChanges();
+            //    //redirection vers l'ajout des ingrédients à la recette nouvellement créé
+            //    return PartialView(TempCartItem);
+            //}
+            //var cart = db.CartItems.Where(d => d.DateCreated == DateTime.Today);
+            return PartialView(TempCartItem);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

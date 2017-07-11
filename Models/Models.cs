@@ -6,6 +6,21 @@ using System.Web;
 
 namespace Cuillere.Models
 {
+    public enum Unit
+    {
+        unite,
+        g,
+        Kg,
+        ml,
+        Cl,
+        L,
+        [Display(Name = "Cuillère à café")]
+        cac,
+        [Display(Name = "Cuillère à soupe")]
+        cas,
+        [Display(Name = "Pincée")]
+        pince
+    }
     public class Ingredient
     {
         [Key]
@@ -51,22 +66,6 @@ namespace Cuillere.Models
         public virtual Saison Saison { get; set; }
     }
 
-    public enum Unit
-    {
-        unite,
-        g,
-        Kg,
-        ml,
-        Cl,
-        L,
-        [Display(Name = "Cuillère à café")]
-        cac,
-        [Display(Name = "Cuillère à soupe")]
-        cas,
-        [Display(Name = "Pincée")]
-        pince
-    }
-
     //Pour ajouter les ingrédients de la recette
     public class RecetteDetail
     {
@@ -106,6 +105,8 @@ namespace Cuillere.Models
         [Key]
         [ScaffoldColumn(false)]
         public int OrderId { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime DateCreated { get; set; }
         public List<OrderDetail> OrderDetail { get; set; }
     }
 
@@ -119,6 +120,7 @@ namespace Cuillere.Models
         public int IngredientId { get; set; }
 
         public int Quantity { get; set; }
+        public Unit unite { get; set; }
 
         public virtual Ingredient Ingredient { get; set; }
 
@@ -130,14 +132,16 @@ namespace Cuillere.Models
     {
         [Key]
         public int CartItemId { get; set; }
-        [DataType(DataType.DateTime)]
+        public string CartId { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
         [Required]
-        public string CartId { get; set; }
+        //public string CartId { get; set; }
         public int IngredientId { get; set; }
         public int Count { get; set; }
         public Unit unite { get; set; }
 
         public virtual Ingredient Ingredient { get; set; }
+        }
     }
-}

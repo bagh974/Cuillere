@@ -38,11 +38,10 @@ namespace Cuillere.Models
         public DbSet<Recette> Recettes { get; set; }
         public DbSet<RecetteDetail> RecetteDetails { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<CartItem> Carts { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
-        public System.Data.Entity.DbSet<Cuillere.Models.Category> Categories { get; set; }
-
-        public System.Data.Entity.DbSet<Cuillere.Models.Saison> Saisons { get; set; }
+        public DbSet<Saison> Saisons { get; set; }
     }
 }

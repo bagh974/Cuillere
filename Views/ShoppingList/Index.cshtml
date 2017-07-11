@@ -1,0 +1,66 @@
+﻿@using System.Diagnostics.Eventing.Reader
+@using System.Globalization
+@model Cuillere.ViewModels.ShoppingCartViewModel
+@{
+    ViewBag.Title = "Store Checkout";
+}
+
+<h3 class="text-center">
+    <span><img src="~/Content/Images/shoping_cart.png" />Ma liste de courses:</span>
+</h3>
+<div id="update-message" class="text-info">
+</div>
+@if (Model.CartItems.Count == 0)
+{
+    <a class="btn-danger" href="~/StoreFront/Index/1">La liste est vide, poursuivre---></a>
+}
+else
+{
+    <table class="table-responsive table-bordered table-striped">
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Unité
+            </th>
+            <th>Sub-total</th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr id="row-@item.IngredientId">
+                <td>
+                    @item.Ingredient.Name
+                </td>
+                <td id="item-count-@item.IngredientId">
+                    @item.Count
+                </td>
+                <td>
+                    @item.unite
+                </td>
+                <td>
+                    @((item.Count).ToString())
+                </td>
+                <td>
+                    <a href="" class="RemoveLink" data-id="@item.IngredientId">
+                        Remove from cart
+                    </a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <p class="button">
+        <a href="javascript:void(0);" onclick="history.go(-1);">Poursuivre</a>
+    </p>
+}
+
+

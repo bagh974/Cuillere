@@ -81,13 +81,12 @@ namespace Cuillere.Controllers
         }
 
         // GET: RecetteDetails/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            RecetteDetail recetteDetail = db.RecetteDetails.Find(id);
+
+            RecetteDetail recetteDetail = null;
+            recetteDetail.RecetteId = id;
+
             if (recetteDetail == null)
             {
                 return HttpNotFound();
