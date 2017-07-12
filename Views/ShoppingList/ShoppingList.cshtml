@@ -1,0 +1,26 @@
+﻿@model Cuillere.ViewModels.ShoppingCartViewModel
+<h5 class="text-center">
+    <span><img src="~/Content/Images/shoping_cart.png" />Ma liste de courses:</span>
+</h5>
+<ul>
+    @foreach (var item in Model.CartItems)
+    {
+        <li id="row-@item.IngredientId">
+                @item.Ingredient.Name
+            <span id="item-count-@item.IngredientId">
+                @item.Count</span>
+                @item.unite
+                <a href="" class="RemoveLink" data-id="@item.IngredientId">
+                    Supprimer
+                </a>
+            
+        </li>
+    }
+</ul>
+    
+
+
+
+    
+
+

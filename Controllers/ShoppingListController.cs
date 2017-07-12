@@ -11,7 +11,7 @@ namespace Cuillere.Controllers
     public class ShoppingListController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         public ActionResult Index()
         {
             var cart = ShoppingList.GetCart(this.HttpContext);
@@ -22,6 +22,7 @@ namespace Cuillere.Controllers
             };
 
             return View(viewModel);
+            //return PartialView(viewModel);
         }
 
         public ActionResult AddToCart(int id)
@@ -31,8 +32,8 @@ namespace Cuillere.Controllers
             var cart = ShoppingList.GetCart(this.HttpContext);
 
             cart.AddToCart(addedProduct);
-            ViewBag.recette = addedProduct.RecetteId;
-
+            
+            //ViewBag.recette = addedProduct.RecetteId;
             return RedirectToAction("Index");
         }
 
@@ -63,6 +64,18 @@ namespace Cuillere.Controllers
 
             ViewData["CartCount"] = cart.GetCount();
             return PartialView("CartSummary");
+        }
+
+        [ChildActionOnly]
+        public ActionResult shoppinglist()
+        {
+            var cart = ShoppingList.GetCart(this.HttpContext);
+            var viewModel = new ShoppingCartViewModel
+            {
+                CartItems = cart.GetCartItems()
+            };
+
+            return PartialView("shoppinglist", viewModel);
         }
     }
 }

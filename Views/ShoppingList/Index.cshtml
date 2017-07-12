@@ -10,12 +10,12 @@
 </h3>
 <div id="update-message" class="text-info">
 </div>
-@if (Model.CartItems.Count == 0)
+@*@if (Model.CartItems.Count == 0)
 {
     <a class="btn-danger" href="~/Recettes/Index">La liste est vide, poursuivre---></a>
 }
 else
-{
+{*@
     <table class="table-responsive table-bordered table-striped">
         <tr>
             <th>
@@ -43,7 +43,7 @@ else
                 </td>
                 <td>
                     <a href="" class="RemoveLink" data-id="@item.IngredientId">
-                        Remove from cart
+                        Supprimer
                     </a>
                 </td>
             </tr>
@@ -57,6 +57,6 @@ else
     <p class="button">
         <a href="javascript:void(0);" onclick="history.go(-1);">Poursuivre</a>
     </p>
-}
+@*}*@
 
 
