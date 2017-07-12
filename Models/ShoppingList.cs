@@ -60,7 +60,7 @@ namespace Cuillere.Models
 
             if (cartItem != null)
             {
-                if (cartItem.Count > 1)
+                if (cartItem.Count > 1 && cartItem.unite == 0)
                 {
                     cartItem.Count--;
                     itemCount = cartItem.Count;
@@ -94,7 +94,7 @@ namespace Cuillere.Models
         public int GetCount()
         {
             int? count =
-                (from cartItems in db.Carts where cartItems.CartId == ShoppingListId select (int?)cartItems.IngredientId).Sum();
+                (from cartItems in db.Carts where cartItems.CartId == ShoppingListId select cartItems.Ingredient.Name).Count();
 
             return count ?? 0;
         }

@@ -1,24 +1,26 @@
-﻿@model Cuillere.Models.Saison
+﻿@using Cuillere.Models
+@model Saison
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Recettes @Html.DisplayFor(model => model.Name)</h2>
 
 <div>
-    <h4>Saison</h4>
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+    <ul>
+        @foreach (Recette r in Model.Recettes)
+        {
+            <li>
+                @r.Name
+                @Html.ActionLink("Voir", "Details", "Recettes", new { id = r.RecetteId }, new { @class = "btn btn-info" })
+            </li>
+        }
+    </ul>
+        
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-    </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.SaisonId }) |

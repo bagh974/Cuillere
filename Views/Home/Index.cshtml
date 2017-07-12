@@ -2,32 +2,38 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
 <div class="row">
-    <div class="col-md-4">
-        <h2>Créer les listes déroulantes</h2>
-        <ul>
-            <li>@Html.ActionLink("Rayon", "Index", "Rayons")</li>
-            <li>@Html.ActionLink("Categories", "Index", "Categories")</li>
-            <li>@Html.ActionLink("Saison", "Index", "Saisons")</li>
-        </ul>
+    <div class="col-md-3">
+        <a href="~/Recettes/Index">
+            <h2>Toutes les recettes</h2>
+            <img src="~/Content/Images/recettes.jpg" alt="" />
+        </a>
     </div>
-    <div class="col-md-4">
-        <h2>Ajouter des ingrédients</h2>
-        <ul>
-            <li>@Html.ActionLink("Ingrédients", "Index", "Ingredients")</li>
-        </ul>
+    <div class="col-md-3">
+        <a href="~/Saisons/Details/1">
+            <h2>Ete</h2>
+            <img src="~/Content/Images/ete.jpg" alt="" />
+        </a>
     </div>
-    <div class="col-md-4">
-        <h2>Ajouter mes recettes</h2>
+    <div class="col-md-3">
+        <a href="~/Saisons/Details/2">
+            <h2>Hiver</h2>
+            <img src="~/Content/Images/hiver.jpg" alt="" />
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="~/Saisons/Details/3">
+            <h2>Toutes saisons</h2>
+            <img src="~/Content/Images/saisons.jpg" alt="" />
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
         <ul>
-            <li>@Html.ActionLink("Recette", "Index", "Recettes")</li>
-            <li>@Html.ActionLink("Détails", "Index", "RecetteDetails")</li>
+            <li><a href="~/Categories/Details/1">Les salades</a></li>
+            <li><a href="~/Categories/Details/2">Les soupes</a></li>
+            <li><a href="~/Categories/Details/3">Les entrées</a></li>
         </ul>
     </div>
 </div>

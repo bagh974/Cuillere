@@ -9,23 +9,46 @@
 
 <div>
     <h4>@Html.DisplayFor(model => model.Category.Name) | @Html.DisplayFor(model => model.Saison.Name)</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.RecetteDetail)
-        </dt>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RecetteDetail)
+            </th>
+            <th>
+                Quantité
+            </th>
+            <th>
+                Unité de mesure
+            </th>
+            <th></th>
+        </tr>
 
         @foreach (RecetteDetail i in Model.RecetteDetail)
         {
-            <dd>
-                 @i.Ingredient.Name @i.Quantity @i.unite
-                @Html.ActionLink("Ajouter", "AddToCart", "ShoppingList", new { id = i.RecetteDetailId}, new { @class = "btn btn-info" })
-            </dd>
+            <tr>
+                <td>
+                    @i.Ingredient.Name  
+                </td>
+                <td>@i.Quantity</td>
+                <td>@i.unite</td>
+                <td>
+                    @Html.ActionLink("Ajouter", "AddToCart", "ShoppingList", new { id = i.RecetteDetailId }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
         }
 
-    </dl>
+    </table>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.RecetteId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<style type="text/css">
+    td {
+        width: 80px;
+    }
+
+    th {
+        width: 80px;
+    }
+</style>

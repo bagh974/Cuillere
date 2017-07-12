@@ -300,6 +300,10 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\ete.jpg" />
+    <Content Include="Content\Images\hiver.jpg" />
+    <Content Include="Content\Images\recettes.jpg" />
+    <Content Include="Content\Images\saisons.jpg" />
     <Content Include="Content\Images\shoping_cart.png" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
@@ -391,7 +395,6 @@
     <Content Include="Views\RecetteDetails\Edit.cshtml" />
     <Content Include="Views\RecetteDetails\Index.cshtml" />
     <Content Include="Views\RecetteDetails\Add.cshtml" />
-    <Content Include="Views\Shared\MyCart.cshtml" />
     <Content Include="Views\ShoppingList\Index.cshtml" />
     <Content Include="Views\ShoppingList\CartSummary.cshtml" />
   </ItemGroup>

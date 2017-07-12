@@ -88,7 +88,7 @@ namespace Cuillere.Models
         public int CategoryId { get; set; }
         [Display(Name = "Catégorie")]
         public string Name { get; set; }
-        public List<Recette> Recettes { get; set; }
+        public virtual List<Recette> Recettes { get; set; }
     }
 
     public class Saison
@@ -96,7 +96,7 @@ namespace Cuillere.Models
         public int SaisonId { get; set; }
         [Display(Name = "Saison")]
         public string Name { get; set; }
-        public List<Recette> Recettes { get; set; }
+        public virtual List<Recette> Recettes { get; set; }
     }
 
     //Ma liste de courses

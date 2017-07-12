@@ -1,26 +1,33 @@
-﻿@model Cuillere.Models.Category
+﻿@using Cuillere.Models
+@model Category
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Catégories";
 }
 
-<h2>Details</h2>
+<h2>Catégorie: @Html.DisplayFor(model => model.Name)</h2>
 
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+<table class="table">
+    <tr>
+        <th>
+            Recette
+        </th>
+        <th></th>
+    </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+    @foreach (Recette r in Model.Recettes)
+    {
+        <tr>
+            <td>
+                @r.Name
+            </td>
+            <td>
+                @Html.ActionLink("Voir", "Details", "Recettes", new { id = r.RecetteId }, new { @class = "btn btn-info" })
+            </td>
+        </tr>
+    }
 
-    </dl>
-</div>
+</table>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
