@@ -28,13 +28,13 @@ namespace Cuillere.Controllers
         public ActionResult AddToCart(int id)
         {
             var addedProduct = db.RecetteDetails.Single(product => product.RecetteDetailId == id);
-
+            var CurrentRecette = addedProduct.RecetteId;
             var cart = ShoppingList.GetCart(this.HttpContext);
 
             cart.AddToCart(addedProduct);
             
             //ViewBag.recette = addedProduct.RecetteId;
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Recettes", new { id = CurrentRecette });
         }
 
         [HttpPost]

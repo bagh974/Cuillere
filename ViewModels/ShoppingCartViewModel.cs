@@ -9,5 +9,6 @@ namespace Cuillere.ViewModels
     public class ShoppingCartViewModel
     {
         public List<CartItem> CartItems { get; set; }
+        public List<Recette> Recettes { get; set; }
     }
 }

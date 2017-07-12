@@ -74,6 +74,10 @@ namespace Cuillere.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
                 }
+                else
+                {
+                    return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
+                }
             }
             ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name", recetteDetail.IngredientId);
             ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
