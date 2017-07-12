@@ -25,6 +25,7 @@
                     <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
                     <li>@Html.ActionLink("Mes recettes", "Index", "Recettes")</li>
                 </ul>
+
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         @{Html.RenderAction("CartSummary", "ShoppingList");}
@@ -41,9 +42,11 @@
             <div class="col-md-3">
                 @{Html.RenderAction("ShoppingList", "ShoppingList");}
             </div>
-                
-            
+        </div>
 
+        <div class="row">
+            <h3>Accès par catégorie</h3>
+            @{Html.RenderAction("CatMenu", "Home");}
         </div>
         
         <hr />

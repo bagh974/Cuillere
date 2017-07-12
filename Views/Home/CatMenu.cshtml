@@ -1,0 +1,12 @@
+﻿@model List<Cuillere.Models.Category>
+
+
+    @foreach (var cat in Model)
+    {
+        <div class="col-md-3">
+            @Html.ActionLink(@cat.Name, "Details", "Categories", new { id = @cat.CategoryId }, new { @class = "btn btn-info" })
+        </div>
+    }
+            
+
+

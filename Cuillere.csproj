@@ -398,6 +398,7 @@
     <Content Include="Views\ShoppingList\Index.cshtml" />
     <Content Include="Views\ShoppingList\CartSummary.cshtml" />
     <Content Include="Views\ShoppingList\ShoppingList.cshtml" />
+    <Content Include="Views\Home\CatMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
