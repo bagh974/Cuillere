@@ -40,7 +40,13 @@
                 @RenderBody()
             </div>
             <div class="col-md-3">
-                    @{Html.RenderAction("ShoppingList", "ShoppingList");}
+                @if (ViewBag.Title != "Ma liste de courses")
+                {
+                    {Html.RenderAction("ShoppingList", "ShoppingList");}
+                }
+                    
+                
+                    
             </div>
         </div>
 
