@@ -36,17 +36,27 @@ namespace Cuillere.Controllers
             return View(recetteDetail);
         }
 
+        public JsonResult GetIngredient(string term = "")
+        {
+            var objIngrelist = db.Ingredients
+                            .Where(i => i.Name.ToUpper()
+                            .Contains(term.ToUpper()))
+                            .Select(i => new { Name = i.Name, ID = i.IngredientId })
+                            .Distinct().ToList();
+            return Json(objIngrelist, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: RecetteDetails/Add
         //Permet d'ajouter les ingrédients à la recette qui vient d'être créée
         public ActionResult Add(int? id)
         {
             if (id == null)
             {
-                ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name");
+                //ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name");
                 ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name");
                 return View();
             }
-            ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name");
+            //ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name");
             ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", id);
             return View();
         }
@@ -57,6 +67,7 @@ namespace Cuillere.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, string ajout)
         {
+
             if (ajout == "Ajouter")
             {
                 if (ModelState.IsValid)
@@ -79,7 +90,7 @@ namespace Cuillere.Controllers
                     return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
                 }
             }
-            ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name", recetteDetail.IngredientId);
+            //ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name", recetteDetail.IngredientId);
             ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
             return View(recetteDetail);
         }

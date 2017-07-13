@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <title>@ViewBag.Title - La Cuillère</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -44,9 +45,6 @@
                 {
                     {Html.RenderAction("ShoppingList", "ShoppingList");}
                 }
-                    
-                
-                    
             </div>
         </div>
 
@@ -64,6 +62,36 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+    $(document).ready(function () {
+    $("#Ingredient_Name").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetIngredient", "RecetteDetails")',
+                datatype: "json",
+                data: {
+                    term: request.term
+                },
+                success: function (data) {
+                    response($.map(data, function (val, item) {
+                        return {
+                            label: val.Name,
+                            value: val.Name,
+                            IngredientId: val.ID
+                        }
+                    }))
+                }
+            })
+        },
+        select: function (event, ui) {
+            $("#Ingredient_Name").val(ui.item.IngredientId);
+            $("#IngredientId").val(ui.item.IngredientId);
+        }
+    });
+});
+    </script>
     <script type="text/javascript">
     $(document).ready(function () {
         $(".RemoveLink").click(function (e) {
@@ -87,8 +115,7 @@
                     });
             }
         });
-    })
-
+    })        
     </script>
 </body>
 </html>
