@@ -8,6 +8,7 @@ namespace Cuillere.Models
 {
     public enum Unit
     {
+        [Display(Name = "p.")]
         unite,
         g,
         Kg,
@@ -44,7 +45,7 @@ namespace Cuillere.Models
         [Display(Name = "Rayon")]
         [StringLength(32, MinimumLength = 4)]
         public string Name { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
+        public virtual List<Ingredient> Ingredients { get; set; }
     }
 
     public class Recette

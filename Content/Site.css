@@ -22,3 +22,8 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.partialViewWrapper {
+    height: 150px;
+    overflow-y: auto;
+}

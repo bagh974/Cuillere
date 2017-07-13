@@ -32,8 +32,7 @@ namespace Cuillere.Controllers
             var cart = ShoppingList.GetCart(this.HttpContext);
 
             cart.AddToCart(addedProduct);
-            
-            //ViewBag.recette = addedProduct.RecetteId;
+
             return RedirectToAction("Details", "Recettes", new { id = CurrentRecette });
         }
 

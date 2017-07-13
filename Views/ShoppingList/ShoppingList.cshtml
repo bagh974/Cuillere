@@ -2,21 +2,21 @@
 <h5 class="text-center">
     <span><img src="~/Content/Images/shoping_cart.png" />Ma liste de courses:</span>
 </h5>
-<ul>
-    @foreach (var item in Model.CartItems)
-    {
-        <li id="row-@item.IngredientId">
-                @item.Ingredient.Name
-            <span id="item-count-@item.IngredientId">
-                @item.Count</span>
-                @item.unite
-                <a href="" class="RemoveLink" data-id="@item.IngredientId">
-                    Supprimer
-                </a>
-            
-        </li>
-    }
-</ul>
+@{
+    var rayons = Model.CartItems.GroupBy(r => r.Ingredient.Rayon.Name)
+                                .Select(r => new { Rayon = r.Key, Ingredient = r });
+}
+@foreach (var r in rayons)
+{
+    <h3>@r.Rayon</h3>
+    <ul>
+        @foreach (var ingre in r.Ingredient)
+        {
+            <li>@ingre.Ingredient.Name @ingre.Count @ingre.unite</li>
+        }
+    </ul>
+}
+@Html.ActionLink("Voir", "Index")
     
 
 

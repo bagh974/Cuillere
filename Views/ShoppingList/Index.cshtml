@@ -2,7 +2,7 @@
 @using System.Globalization
 @model Cuillere.ViewModels.ShoppingCartViewModel
 @{
-    ViewBag.Title = "Store Checkout";
+    ViewBag.Title = "Ma liste de courses";
 }
 
 <h3 class="text-center">
@@ -16,46 +16,43 @@
 }
 else
 {*@
-    <table class="table-responsive table-bordered table-striped">
-        <tr>
-            <th>
-                Ingrédient
-            </th>
-            <th>
-                Quantité
-            </th>
-            <th>
-                Unité
-            </th>
-            <th></th>
-        </tr>
-        @foreach (var item in Model.CartItems)
+
+@{ 
+    var rayons = Model.CartItems.GroupBy(r => r.Ingredient.Rayon.Name)
+                                .Select(r => new { Rayon = r.Key, Ingredient = r });
+}
+
+@foreach (var r in rayons)
+{
+    <h3>@r.Rayon</h3>
+    <table class="table-responsive table-striped">
+        @foreach (var ingre in r.Ingredient)
         {
-            <tr id="row-@item.IngredientId">
+            <tr id="row-@ingre.IngredientId">
                 <td>
-                    @item.Ingredient.Name
-                </td>
-                <td id="item-count-@item.IngredientId">
-                    @item.Count
-                </td>
-                <td>
-                    @item.unite
-                </td>
-                <td>
-                    <a href="" class="RemoveLink" data-id="@item.IngredientId">
-                        Supprimer
-                    </a>
-                </td>
-            </tr>
+                    @ingre.Ingredient.Name
+            </td>
+            <td id="item-count-@ingre.IngredientId">
+                @ingre.Count @ingre.unite
+            </td>
+            <td></td>
+            <td>
+                <a href="" class="RemoveLink" data-id="@ingre.IngredientId">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+
         }
         <tr>
             <td></td>
             <td></td>
         </tr>
     </table>
-    <p class="button">
-        <a href="javascript:void(0);" onclick="history.go(-1);">Poursuivre</a>
-    </p>
-@*}*@
+}
+        <p class="button">
+            <a href="javascript:void(0);" onclick="history.go(-1);">Poursuivre</a>
+        </p>
+        @*}*@
 
 
