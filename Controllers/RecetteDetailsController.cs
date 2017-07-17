@@ -161,7 +161,7 @@ namespace Cuillere.Controllers
             RecetteDetail recetteDetail = db.RecetteDetails.Find(id);
             db.RecetteDetails.Remove(recetteDetail);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
         }
 
         protected override void Dispose(bool disposing)

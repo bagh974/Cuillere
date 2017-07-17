@@ -34,6 +34,9 @@
                 <td>
                     @Html.ActionLink("Ajouter", "AddToCart", "ShoppingList", new { id = i.RecetteDetailId }, new { @class = "btn btn-info" })
                 </td>
+                <td>
+                    @Html.ActionLink("Supprimer", "Delete", "RecetteDetails", new { id = i.RecetteDetailId }, new { @class = "btn btn-info" })
+                </td>
             </tr>
         }
 
