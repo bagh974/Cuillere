@@ -78,8 +78,9 @@ namespace Cuillere.Controllers
                     db.Ingredients.Add(ingre);
                     db.SaveChanges();
                 }
-                recetteDetail.IngredientId = ingre.IngredientId;
             }
+
+            recetteDetail.IngredientId = ingre.IngredientId;
 
             if (ajout == "Ajouter")
             {
@@ -101,18 +102,6 @@ namespace Cuillere.Controllers
             }
             ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
             return View(recetteDetail);
-        }
-
-        public static async Task NewIngreAsync(string Ingredient_Name)
-        {
-            var db = new ApplicationDbContext();
-            Ingredient ingre = new Ingredient()
-            {
-                Name = Ingredient_Name,
-                RayonId = 11
-            };
-            db.Ingredients.Add(ingre);
-            await db.SaveChangesAsync();
         }
 
         // GET: RecetteDetails/Edit/5

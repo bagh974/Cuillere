@@ -7,6 +7,7 @@ using System.Net;
 using PagedList;
 using System.Web.Mvc;
 using Cuillere.Models;
+using System.Data.Entity.Infrastructure;
 
 namespace Cuillere.Controllers
 {
@@ -88,8 +89,10 @@ namespace Cuillere.Controllers
         // GET: Recettes/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
-            ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name");
+            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
+            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name");
+            PopulateCategories();
+            PopulateSaisons();
             return View();
         }
 
@@ -100,16 +103,25 @@ namespace Cuillere.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "RecetteId,Name,CategoryId,SaisonId")] Recette recette)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Recettes.Add(recette);
-                db.SaveChanges();
-                //redirection vers l'ajout des ingrédients à la recette nouvellement créé
-                return RedirectToAction("Add", "RecetteDetails", new { id = recette.RecetteId });
+                if (ModelState.IsValid)
+                {
+                    db.Recettes.Add(recette);
+                    db.SaveChanges();
+                    //redirection vers l'ajout des ingrédients à la recette nouvellement créé
+                    return RedirectToAction("Add", "RecetteDetails", new { id = recette.RecetteId });
+                }
             }
-
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
-            ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.)
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+            }
+            PopulateCategories(recette.CategoryId);
+            PopulateSaisons(recette.SaisonId);
+            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
+            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
             return View(recette);
         }
 
@@ -120,32 +132,67 @@ namespace Cuillere.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recette recette = db.Recettes.Find(id);
+            Recette recette = db.Recettes.Include(r=> r.Category)
+                                         .Include(r=> r.Saison)
+                                         .Where(r=> r.RecetteId == id)
+                                         .Single();
             if (recette == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
-            ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
+            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
+            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
+            PopulateCategories(recette.CategoryId);
+            PopulateSaisons(recette.SaisonId);
             return View(recette);
         }
 
         // POST: Recettes/Edit/5
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RecetteId,Name,CategoryId,SaisonId")] Recette recette)
+        public ActionResult EditPost(int? id)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                db.Entry(recette).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
-            ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
-            return View(recette);
+            var recetteToUpdate = db.Recettes.Find(id);
+            if (TryUpdateModel(recetteToUpdate, "",
+               new string[] { "Name", "CategoryId", "SaisonId" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            PopulateCategories(recetteToUpdate.CategoryId);
+            PopulateSaisons(recetteToUpdate.SaisonId);
+            return View(recetteToUpdate);
+        }
+
+        private void PopulateCategories(object selectedCategory = null)
+        {
+            var categoriesQuery = from c in db.Categories
+                              orderby c.Name
+                              select c;
+            ViewBag.CategoryId = new SelectList(categoriesQuery, "CategoryId", "Name", selectedCategory);
+        }
+
+        private void PopulateSaisons(object selectedSaison = null)
+        {
+            var saisonsQuery = from s in db.Saisons
+                                  orderby s.Name
+                                  select s;
+            ViewBag.SaisonId = new SelectList(saisonsQuery, "SaisonId", "Name", selectedSaison);
         }
 
         // GET: Recettes/Delete/5

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Cuillere.Models;
+using System.Data.Entity.Infrastructure;
 
 namespace Cuillere.Controllers
 {
@@ -39,7 +40,8 @@ namespace Cuillere.Controllers
         // GET: Ingredients/Create
         public ActionResult Create()
         {
-            ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name");
+            //ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name");
+            PopulateRayons();
             return View();
         }
 
@@ -50,14 +52,23 @@ namespace Cuillere.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "IngredientId,Name,RayonId")] Ingredient ingredient)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Ingredients.Add(ingredient);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Ingredients.Add(ingredient);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.)
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+            }
+            PopulateRayons(ingredient.RayonId);
 
-            ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name", ingredient.RayonId);
+            //ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name", ingredient.RayonId);
             return View(ingredient);
         }
 
@@ -68,32 +79,55 @@ namespace Cuillere.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ingredient ingredient = db.Ingredients.Find(id);
+            //Ingredient ingredient = db.Ingredients.Find(id);
+            Ingredient ingredient = db.Ingredients.Include(i=> i.Rayon)
+                                                  .Where(i=> i.IngredientId == id)
+                                                  .Single();
             if (ingredient == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name", ingredient.RayonId);
+            //ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name", ingredient.RayonId);
+            PopulateRayons(ingredient.RayonId);
             return View(ingredient);
         }
 
         // POST: Ingredients/Edit/5
-        // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
-        // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IngredientId,Name,RayonId")] Ingredient ingredient)
+        public ActionResult EditPost(int? id)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                db.Entry(ingredient).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.RayonId = new SelectList(db.Rayons, "RayonId", "Name", ingredient.RayonId);
-            return View(ingredient);
+            var ingredientToUpdate = db.Ingredients.Find(id);
+            if (TryUpdateModel(ingredientToUpdate, "",
+               new string[] { "Name", "RayonId" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            PopulateRayons(ingredientToUpdate.RayonId);
+            return View(ingredientToUpdate);
         }
 
+        private void PopulateRayons(object selectedRayon = null)
+        {
+            var rayonsQuery = from r in db.Rayons
+                                   orderby r.Name
+                                   select r;
+            ViewBag.RayonId = new SelectList(rayonsQuery, "RayonId", "Name", selectedRayon);
+        }
         // GET: Ingredients/Delete/5
         public ActionResult Delete(int? id)
         {
