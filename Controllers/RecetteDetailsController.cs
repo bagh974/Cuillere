@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Cuillere.Models;
+using System.Threading.Tasks;
 
 namespace Cuillere.Controllers
 {
@@ -35,7 +36,7 @@ namespace Cuillere.Controllers
             }
             return View(recetteDetail);
         }
-
+        //Autocomplétion pour les ingrédients
         public JsonResult GetIngredient(string term = "")
         {
             var objIngrelist = db.Ingredients
@@ -47,16 +48,13 @@ namespace Cuillere.Controllers
         }
 
         // GET: RecetteDetails/Add
-        //Permet d'ajouter les ingrédients à la recette qui vient d'être créée
         public ActionResult Add(int? id)
         {
             if (id == null)
             {
-                //ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name");
                 ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name");
                 return View();
             }
-            //ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name");
             ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", id);
             return View();
         }
@@ -65,8 +63,23 @@ namespace Cuillere.Controllers
         // Ajout un ingrédient à la recette ou clôture l'enregistrement de cette dernière
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, string ajout)
+        public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, string ajout, string Ingredient_Name)
         {
+            var ingre = db.Ingredients.SingleOrDefault(i=> i.Name == Ingredient_Name);
+            if (ingre == null)
+            {
+                ingre = new Ingredient()
+                {
+                    Name = Ingredient_Name,
+                    RayonId = 11
+                };
+                if (ModelState.IsValid)
+                {
+                    db.Ingredients.Add(ingre);
+                    db.SaveChanges();
+                }
+                recetteDetail.IngredientId = ingre.IngredientId;
+            }
 
             if (ajout == "Ajouter")
             {
@@ -85,14 +98,21 @@ namespace Cuillere.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
                 }
-                else
-                {
-                    return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
-                }
             }
-            //ViewBag.IngredientId = new SelectList(db.Ingredients.OrderBy(x => x.Name), "IngredientId", "Name", recetteDetail.IngredientId);
             ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
             return View(recetteDetail);
+        }
+
+        public static async Task NewIngreAsync(string Ingredient_Name)
+        {
+            var db = new ApplicationDbContext();
+            Ingredient ingre = new Ingredient()
+            {
+                Name = Ingredient_Name,
+                RayonId = 11
+            };
+            db.Ingredients.Add(ingre);
+            await db.SaveChangesAsync();
         }
 
         // GET: RecetteDetails/Edit/5

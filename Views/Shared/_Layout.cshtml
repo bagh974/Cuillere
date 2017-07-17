@@ -82,6 +82,9 @@
                             IngredientId: val.ID
                         }
                     }))
+                },
+                error: function (response) {
+                    alert(alert(response.responseText));
                 }
             })
         },

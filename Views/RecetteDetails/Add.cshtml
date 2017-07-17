@@ -24,9 +24,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.IngredientId, "Ingredient", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model =>model.Ingredient.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.HiddenFor(model => Model.IngredientId)
-                @Html.ValidationMessageFor(model => model.IngredientId, "", new { @class = "text-danger" })
+                @Html.EditorFor(model =>model.Ingredient.Name, new { htmlAttributes = new { Name = "Ingredient_Name", @class = "form-control"} })
+                @Html.HiddenFor(model => Model.Ingredient.Name, new { Value = ""})
+                @Html.ValidationMessageFor(model => model.Ingredient.Name, "", new { @class = "text-danger" })
             </div>
         </div>
 
