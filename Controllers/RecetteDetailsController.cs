@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cuillere.Models;
 using System.Threading.Tasks;
+using System.Data.Entity.Infrastructure;
 
 namespace Cuillere.Controllers
 {
@@ -52,20 +53,37 @@ namespace Cuillere.Controllers
         {
             if (id == null)
             {
-                ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name");
+                //ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name");
+                PopulateRecettes();
                 return View();
             }
-            ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", id);
-            return View();
+            //Recette recette = db.Recettes.Find(id);
+            //ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", id);
+            //PopulateRecettes(recette.RecetteId);
+            //return View();
+            RecetteDetail addToRecette = new RecetteDetail()
+            {
+                RecetteId = (int)id
+            };
+            if (addToRecette == null)
+            {
+                return HttpNotFound();
+            }
+            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
+            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
+            PopulateRecettes(addToRecette.RecetteId);
+            return View(addToRecette);
         }
 
         // POST: RecetteDetails/Add
         // Ajout un ingrédient à la recette ou clôture l'enregistrement de cette dernière
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, string ajout, string Ingredient_Name)
+        public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, 
+            string ajout, string Ingredient_Name)
         {
-            var ingre = db.Ingredients.SingleOrDefault(i=> i.Name == Ingredient_Name);
+            
+            var ingre = db.Ingredients.SingleOrDefault(i => i.Name == Ingredient_Name);
             if (ingre == null)
             {
                 ingre = new Ingredient()
@@ -81,26 +99,36 @@ namespace Cuillere.Controllers
             }
 
             recetteDetail.IngredientId = ingre.IngredientId;
-
-            if (ajout == "Ajouter")
+            try
             {
-                if (ModelState.IsValid)
+                if (ajout == "Ajouter")
                 {
-                    db.RecetteDetails.Add(recetteDetail);
-                    db.SaveChanges();
-                    return RedirectToAction("Add", new { id = recetteDetail.RecetteId });
+                    if (ModelState.IsValid)
+                    {
+                        db.RecetteDetails.Add(recetteDetail);
+                        //Ne trouve pas RecetteId
+                        db.SaveChanges();
+                        //return RedirectToAction("Add", new { id = recetteDetail.RecetteId });
+                        return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
+                    }
+                }
+                if (ajout == "Terminer")
+                {
+                    if (ModelState.IsValid)
+                    {
+                        db.RecetteDetails.Add(recetteDetail);
+                        db.SaveChanges();
+                        return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
+                    }
                 }
             }
-            if (ajout == "Terminer")
+            catch (RetryLimitExceededException /* dex */)
             {
-                if (ModelState.IsValid)
-                {
-                    db.RecetteDetails.Add(recetteDetail);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
-                }
+                //Log the error (uncomment dex variable name and add a line here to write a log.)
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
-            ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
+            //ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
+            PopulateRecettes(recetteDetail.RecetteId);
             return View(recetteDetail);
         }
 
@@ -136,6 +164,14 @@ namespace Cuillere.Controllers
             ViewBag.IngredientId = new SelectList(db.Ingredients, "IngredientId", "Name", recetteDetail.IngredientId);
             ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", recetteDetail.RecetteId);
             return View(recetteDetail);
+        }
+
+        private void PopulateRecettes(object selectedRecette = null)
+        {
+            var recettesQuery = from r in db.Recettes
+                                  orderby r.Name
+                                  select r;
+            ViewBag.RecetteId = new SelectList(recettesQuery, "RecetteId", "Name", selectedRecette);
         }
 
         // GET: RecetteDetails/Delete/5

@@ -125,6 +125,15 @@ namespace Cuillere.Controllers
             return View(recette);
         }
 
+        public ActionResult Add(int id)
+        {
+            //Recette recette = db.Recettes.Include(r => r.Category)
+            //                             .Include(r => r.Saison)
+            //                             .Where(r => r.RecetteId == id)
+            //                             .Single();
+            Recette recette = db.Recettes.Find(id);
+            return RedirectToAction("Add", "RecetteDetails", new { id = recette.RecetteId });
+        }
         // GET: Recettes/Edit/5
         public ActionResult Edit(int? id)
         {
