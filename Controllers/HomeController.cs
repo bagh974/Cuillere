@@ -28,11 +28,11 @@ namespace Cuillere.Controllers
 
             return View();
         }
-        [ChildActionOnly]
-        public ActionResult CatMenu()
-        {
-            List<Category> catMenu = db.Categories.ToList();
-            return PartialView(catMenu);
-        }
+        //[ChildActionOnly]
+        //public ActionResult CatMenu()
+        //{
+        //    List<Category> catMenu = db.Categories.ToList();
+        //    return PartialView(catMenu);
+        //}
     }
 }

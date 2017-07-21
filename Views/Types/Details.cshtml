@@ -1,0 +1,33 @@
+﻿@using Cuillere.Models
+@model Cuillere.Models.Type
+
+@{
+    ViewBag.Title = "Type";
+}
+
+<h2>Type: @Html.DisplayFor(model => model.Name)</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Recette
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (Recette r in Model.Recettes)
+    {
+        <tr>
+            <td>
+                @r.Name
+            </td>
+            <td>
+                @Html.ActionLink("Voir", "Details", "Recettes", new { id = r.RecetteId }, new { @class = "btn btn-info" })
+            </td>
+        </tr>
+    }
+
+</table>
+<p>
+    @Html.ActionLink("Retour", "Details", "Categories", new { id = Model.CategoryId }, new { Value = Model.CategoryId})
+</p>

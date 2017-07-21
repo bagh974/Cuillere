@@ -32,7 +32,6 @@ namespace Cuillere.Models
         {
             return new ApplicationDbContext();
         }
-
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Rayon> Rayons { get; set; }
         public DbSet<Recette> Recettes { get; set; }
@@ -41,7 +40,7 @@ namespace Cuillere.Models
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<CartItem> Carts { get; set; }
         public DbSet<Category> Categories { get; set; }
-
+        public DbSet<Type> Types { get; set; }
         public DbSet<Saison> Saisons { get; set; }
-    }
+    } 
 }

@@ -53,15 +53,9 @@ namespace Cuillere.Controllers
         {
             if (id == null)
             {
-                //ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                //PopulateRecettes();
-                //return View();
             }
             Recette recette = db.Recettes.Find(id);
-            //ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", id);
-            //PopulateRecettes(recette.RecetteId);
-            //return View();
             RecetteDetail addToRecette = new RecetteDetail()
             {
                 RecetteId = (int)id,
@@ -71,18 +65,15 @@ namespace Cuillere.Controllers
             {
                 return HttpNotFound();
             }
-            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
-            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
             PopulateRecettes(addToRecette.RecetteId);
             return View(addToRecette);
         }
 
         // POST: RecetteDetails/Add
-        // Ajout un ingrédient à la recette ou clôture l'enregistrement de cette dernière
+        // Ajout un ingrédient à la recette
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, 
-            string ajout, string Ingredient_Name)
+        public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, string Ingredient_Name)
         {
             var ingre = db.Ingredients.SingleOrDefault(i => i.Name == Ingredient_Name);
             if (ingre == null)
@@ -101,32 +92,19 @@ namespace Cuillere.Controllers
             recetteDetail.IngredientId = ingre.IngredientId;
             try
             {
-                if (ajout == "Ajouter")
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
-                    {
-                        db.RecetteDetails.Add(recetteDetail);
-                        //Ne trouve pas RecetteId
-                        db.SaveChanges();
-                        return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
-                    }
+                    db.RecetteDetails.Add(recetteDetail);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
                 }
-                if (ajout == "Terminer")
-                {
-                    if (ModelState.IsValid)
-                    {
-                        db.RecetteDetails.Add(recetteDetail);
-                        db.SaveChanges();
-                        return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
-                    }
-                }
+                
             }
             catch (RetryLimitExceededException /* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.)
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
-            //ViewBag.RecetteId = new SelectList(db.Recettes.OrderBy(x => x.Name), "RecetteId", "Name", recetteDetail.RecetteId);
             PopulateRecettes(recetteDetail.RecetteId);
             return View(recetteDetail);
         }

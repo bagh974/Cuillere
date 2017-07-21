@@ -37,7 +37,7 @@
     </div>
     <div class="container body-content">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-7">
                 @RenderBody()
             </div>
             <div class="col-md-3">
@@ -47,13 +47,7 @@
                 }
             </div>
         </div>
-
-        <div class="row">
-            <h3>Accès par catégorie</h3>
-            @{Html.RenderAction("CatMenu", "Home");}
-        </div>
-        
-        <hr />
+ <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Bagh</p>
         </footer>

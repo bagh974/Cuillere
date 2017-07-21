@@ -22,6 +22,7 @@ namespace Cuillere.Controllers
             ViewBag.RecetteSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.SaisonSortParm = sortOrder == "Saison" ? "saison_desc" : "Saison";
             ViewBag.CategorySortParm = sortOrder == "Catégorie" ? "category_desc" : "Catégorie";
+            ViewBag.TypeSortParm = sortOrder == "Type" ? "type_desc" : "Type";
 
             if (searchString != null)
             {
@@ -40,7 +41,8 @@ namespace Cuillere.Controllers
             {
                 recettes = recettes.Where(s => s.Name.Contains(searchString)
                                        || s.Saison.Name.Contains(searchString)
-                                       || s.Category.Name.Contains(searchString));
+                                       || s.Category.Name.Contains(searchString)
+                                       || s.Type.Name.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -59,6 +61,12 @@ namespace Cuillere.Controllers
                     break;
                 case "category_desc":
                     recettes = recettes.OrderByDescending(s => s.Category.Name);
+                    break;
+                case "Type":
+                    recettes = recettes.OrderBy(s => s.Type.Name);
+                    break;
+                case "type_desc":
+                    recettes = recettes.OrderByDescending(s => s.Type.Name);
                     break;
                 default:
                     recettes = recettes.OrderBy(s => s.Name);
@@ -89,9 +97,8 @@ namespace Cuillere.Controllers
         // GET: Recettes/Create
         public ActionResult Create()
         {
-            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
-            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name");
             PopulateCategories();
+            PopulateTypes();
             PopulateSaisons();
             return View();
         }
@@ -101,7 +108,7 @@ namespace Cuillere.Controllers
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RecetteId,Name,CategoryId,SaisonId")] Recette recette)
+        public ActionResult Create([Bind(Include = "RecetteId,Name,CategoryId,TypeId,SaisonId")] Recette recette)
         {
             try
             {
@@ -119,20 +126,18 @@ namespace Cuillere.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
             PopulateCategories(recette.CategoryId);
+            PopulateTypes(recette.TypeId);
             PopulateSaisons(recette.SaisonId);
-            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
-            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
             return View(recette);
         }
 
         public ActionResult Add(int id)
         {
             Recette recette = db.Recettes.Include(r => r.Category)
+                                         .Include(r => r.Type)
                                          .Include(r => r.Saison)
                                          .Where(r => r.RecetteId == id)
                                          .Single();
-            //Recette recette = db.Recettes.Find(id);
-            //recette.RecetteDetail = (from i in db.RecetteDetails where i.RecetteId == recette.RecetteId select i).ToList();
             return RedirectToAction("Add", "RecetteDetails", new { id = recette.RecetteId });
         }
         // GET: Recettes/Edit/5
@@ -143,6 +148,7 @@ namespace Cuillere.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Recette recette = db.Recettes.Include(r=> r.Category)
+                                         .Include(r => r.Type)
                                          .Include(r=> r.Saison)
                                          .Where(r=> r.RecetteId == id)
                                          .Single();
@@ -150,9 +156,8 @@ namespace Cuillere.Controllers
             {
                 return HttpNotFound();
             }
-            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", recette.CategoryId);
-            //ViewBag.SaisonId = new SelectList(db.Saisons, "SaisonId", "Name", recette.SaisonId);
             PopulateCategories(recette.CategoryId);
+            PopulateTypes(recette.TypeId);
             PopulateSaisons(recette.SaisonId);
             return View(recette);
         }
@@ -170,7 +175,7 @@ namespace Cuillere.Controllers
             }
             var recetteToUpdate = db.Recettes.Find(id);
             if (TryUpdateModel(recetteToUpdate, "",
-               new string[] { "Name", "CategoryId", "SaisonId" }))
+               new string[] { "Name", "CategoryId", "TypeId", "SaisonId" }))
             {
                 try
                 {
@@ -185,6 +190,7 @@ namespace Cuillere.Controllers
                 }
             }
             PopulateCategories(recetteToUpdate.CategoryId);
+            PopulateTypes(recetteToUpdate.TypeId);
             PopulateSaisons(recetteToUpdate.SaisonId);
             return View(recetteToUpdate);
         }
@@ -195,6 +201,13 @@ namespace Cuillere.Controllers
                               orderby c.Name
                               select c;
             ViewBag.CategoryId = new SelectList(categoriesQuery, "CategoryId", "Name", selectedCategory);
+        }
+        private void PopulateTypes(object selectedType = null)
+        {
+            var typesQuery = from t in db.Types
+                                  orderby t.Name
+                                  select t;
+            ViewBag.TypeId = new SelectList(typesQuery, "TypeId", "Name", selectedType);
         }
 
         private void PopulateSaisons(object selectedSaison = null)

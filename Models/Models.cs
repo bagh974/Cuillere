@@ -59,11 +59,14 @@ namespace Cuillere.Models
         public string Name { get; set; }
         [Display(Name = "Catégorie")]
         public int CategoryId { get; set; }
+        [Display(Name = "Type")]
+        public int? TypeId { get; set; }
         [Display(Name = "Saison")]
         public int SaisonId { get; set; }
         [Display(Name = "Ingrédients")]
         public virtual List<RecetteDetail> RecetteDetail { get; set; }
         public virtual Category Category { get; set; }
+        public virtual Type Type { get; set; }
         public virtual Saison Saison { get; set; }
     }
 
@@ -89,6 +92,16 @@ namespace Cuillere.Models
         public int CategoryId { get; set; }
         [Display(Name = "Catégorie")]
         public string Name { get; set; }
+        public virtual List<Recette> Recettes { get; set; }
+    }
+
+    public class Type
+    {
+        public int TypeId { get; set; }
+        [Display(Name = "Type")]
+        public string Name { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
         public virtual List<Recette> Recettes { get; set; }
     }
 

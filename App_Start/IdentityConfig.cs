@@ -14,6 +14,42 @@ using Cuillere.Models;
 
 namespace Cuillere
 {
+    
+        
+        //protected override void Seed(ApplicationDbContext context)
+        //{
+        //    IList<Category> defaultCategories = new List<Category>();
+
+        //    defaultCategories.Add(new Category() { CategoryId = 1, Name = "Entrées" });
+        //    defaultCategories.Add(new Category() { CategoryId = 2, Name = "Viandes" });
+        //    defaultCategories.Add(new Category() { CategoryId = 3, Name = "Poissons" });
+        //    defaultCategories.Add(new Category() { CategoryId = 4, Name = "Plats" });
+        //    defaultCategories.Add(new Category() { CategoryId = 5, Name = "Accompagnement" });
+        //    defaultCategories.Add(new Category() { CategoryId = 6, Name = "Desserts" });
+
+        //    foreach (Category cat in defaultCategories)
+        //        context.Categories.Add(cat);
+
+        //    IList<Type> defaultTypes = new List<Type>();
+
+        //    defaultTypes.Add(new Type() { TypeId = 1, Name = "Cakes", CategoryId = 1 });
+        //    defaultTypes.Add(new Type() { TypeId = 2, Name = "Salades", CategoryId = 1 });
+        //    defaultTypes.Add(new Type() { TypeId = 3, Name = "Soupes", CategoryId = 1 });
+        //    defaultTypes.Add(new Type() { TypeId = 4, Name = "Tartes", CategoryId = 1 });
+        //    defaultTypes.Add(new Type() { TypeId = 5, Name = "Agneau", CategoryId = 2 });
+        //    defaultTypes.Add(new Type() { TypeId = 6, Name = "Boeuf", CategoryId = 2 });
+        //    defaultTypes.Add(new Type() { TypeId = 7, Name = "Canard", CategoryId = 2 });
+        //    defaultTypes.Add(new Type() { TypeId = 8, Name = "Lapin", CategoryId = 2 });
+        //    defaultTypes.Add(new Type() { TypeId = 9, Name = "Porc", CategoryId = 2 });
+        //    defaultTypes.Add(new Type() { TypeId = 10, Name = "Poulet", CategoryId = 2 });
+        //    defaultTypes.Add(new Type() { TypeId = 11, Name = "Veau", CategoryId = 2 });
+
+        //    foreach (Type t in defaultTypes)
+        //        context.Types.Add(t);
+
+        //    base.Seed(context);
+        //}
+    
     public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)

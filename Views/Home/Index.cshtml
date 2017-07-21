@@ -3,6 +3,9 @@
 }
 
 <div class="row">
+    <div class="col-md-4">
+        @Html.Partial("_CatMenu")
+    </div>
     <div class="col-md-5">
         <a href="~/Recettes/Index">
             <h3>Toutes les recettes</h3>
@@ -10,24 +13,7 @@
         </a>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <a href="~/Saisons/Details/1">
-            <h3>Ete</h3>
-            <img src="~/Content/Images/ete.jpg" alt="" />
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a href="~/Saisons/Details/2">
-            <h3>Hiver</h3>
-            <img src="~/Content/Images/hiver.jpg" alt="" />
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a href="~/Saisons/Details/3">
-            <h3>Toutes saisons</h3>
-            <img src="~/Content/Images/saisons.jpg" alt="" />
-        </a>
-    </div>
-</div>
+
+    
+
 

@@ -8,7 +8,13 @@
 <h2>@Html.DisplayFor(model => model.Name)</h2>
 
 <div>
-    <h4>@Html.DisplayFor(model => model.Category.Name) | @Html.DisplayFor(model => model.Saison.Name)</h4>
+    @if (Model.Type == null)
+        {
+            <h4>@Html.DisplayFor(model => model.Category.Name) | @Html.DisplayFor(model => model.Saison.Name)</h4>
+        }
+        <h4>@Html.DisplayFor(model => model.Type.Name) | @Html.DisplayFor(model => model.Saison.Name)</h4>
+    
+    
     <table class="table">
         <tr>
             <th>

@@ -27,6 +27,9 @@
             @Html.ActionLink("Catégorie", "Index", new { sortOrder = ViewBag.CategorySortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
+            @Html.ActionLink("Type", "Index", new { sortOrder = ViewBag.TypeSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
             @Html.ActionLink("Saison", "Index", new { sortOrder = ViewBag.SaisonSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
@@ -39,6 +42,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Type.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Saison.Name)
