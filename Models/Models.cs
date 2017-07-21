@@ -29,7 +29,7 @@ namespace Cuillere.Models
         public int IngredientId { get; set; }
         [Required]
         [Display(Name = "Ingrédient")]
-        [StringLength(32, MinimumLength = 4)]
+        [StringLength(32, MinimumLength = 3)]
         public string Name { get; set; }
         [Required]
         public int RayonId { get; set; }
