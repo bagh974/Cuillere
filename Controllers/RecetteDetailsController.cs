@@ -54,16 +54,18 @@ namespace Cuillere.Controllers
             if (id == null)
             {
                 //ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name");
-                PopulateRecettes();
-                return View();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //PopulateRecettes();
+                //return View();
             }
-            //Recette recette = db.Recettes.Find(id);
+            Recette recette = db.Recettes.Find(id);
             //ViewBag.RecetteId = new SelectList(db.Recettes, "RecetteId", "Name", id);
             //PopulateRecettes(recette.RecetteId);
             //return View();
             RecetteDetail addToRecette = new RecetteDetail()
             {
-                RecetteId = (int)id
+                RecetteId = (int)id,
+                Recette = recette
             };
             if (addToRecette == null)
             {
@@ -82,7 +84,6 @@ namespace Cuillere.Controllers
         public ActionResult Add([Bind(Include = "RecetteDetailId,RecetteId,IngredientId,Quantity,unite")] RecetteDetail recetteDetail, 
             string ajout, string Ingredient_Name)
         {
-            
             var ingre = db.Ingredients.SingleOrDefault(i => i.Name == Ingredient_Name);
             if (ingre == null)
             {
@@ -97,7 +98,6 @@ namespace Cuillere.Controllers
                     db.SaveChanges();
                 }
             }
-
             recetteDetail.IngredientId = ingre.IngredientId;
             try
             {
@@ -108,7 +108,6 @@ namespace Cuillere.Controllers
                         db.RecetteDetails.Add(recetteDetail);
                         //Ne trouve pas RecetteId
                         db.SaveChanges();
-                        //return RedirectToAction("Add", new { id = recetteDetail.RecetteId });
                         return RedirectToAction("Details", "Recettes", new { id = recetteDetail.RecetteId });
                     }
                 }

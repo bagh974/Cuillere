@@ -1,0 +1,10 @@
+﻿@using Cuillere.Models
+@model Recette
+    <h2>@Html.DisplayFor(model=> model.Name)</h2>
+
+<ul>
+@foreach (RecetteDetail i in Model.RecetteDetail)
+{
+    <li>@i.Ingredient.Name @i.Quantity @i.unite</li>
+}
+</ul>

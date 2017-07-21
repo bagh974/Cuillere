@@ -98,16 +98,7 @@ namespace Cuillere.Models
 
             return count ?? 0;
         }
-
-        //public decimal GetTotal()
-        //{
-        //    decimal? total = (from cartItems in db.Carts
-        //                      where cartItems.CartId == ShoppingListId
-        //                      select (int?)cartItems.Count * cartItems.Product.Price).Sum();
-
-        //    return total ?? decimal.Zero;
-        //}
-
+        
         public int CreateOrder(Order customerOrder)
         {
             decimal orderTotal = 0;

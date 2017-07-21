@@ -127,11 +127,12 @@ namespace Cuillere.Controllers
 
         public ActionResult Add(int id)
         {
-            //Recette recette = db.Recettes.Include(r => r.Category)
-            //                             .Include(r => r.Saison)
-            //                             .Where(r => r.RecetteId == id)
-            //                             .Single();
-            Recette recette = db.Recettes.Find(id);
+            Recette recette = db.Recettes.Include(r => r.Category)
+                                         .Include(r => r.Saison)
+                                         .Where(r => r.RecetteId == id)
+                                         .Single();
+            //Recette recette = db.Recettes.Find(id);
+            //recette.RecetteDetail = (from i in db.RecetteDetails where i.RecetteId == recette.RecetteId select i).ToList();
             return RedirectToAction("Add", "RecetteDetails", new { id = recette.RecetteId });
         }
         // GET: Recettes/Edit/5
