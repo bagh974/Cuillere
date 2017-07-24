@@ -22,6 +22,17 @@ namespace Cuillere.Controllers
         //}
 
         // GET: Types/Details/5
+        public ActionResult GetTypeStarter()
+        {
+            var typeStarter = db.Types.Where(t => t.CategoryId == 1).ToList();
+            return View(typeStarter);
+        }
+
+        public ActionResult GetTypeMeat()
+        {
+            var typeMeat = db.Types.Where(t => t.CategoryId == 2).ToList();
+            return View(typeMeat);
+        }
         public ActionResult Details(int? id)
         {
             if (id == null)

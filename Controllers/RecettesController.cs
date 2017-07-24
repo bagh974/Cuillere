@@ -98,7 +98,6 @@ namespace Cuillere.Controllers
         public ActionResult Create()
         {
             PopulateCategories();
-            PopulateTypes();
             PopulateSaisons();
             return View();
         }
@@ -126,7 +125,6 @@ namespace Cuillere.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
             PopulateCategories(recette.CategoryId);
-            PopulateTypes(recette.TypeId);
             PopulateSaisons(recette.SaisonId);
             return View(recette);
         }
@@ -157,7 +155,6 @@ namespace Cuillere.Controllers
                 return HttpNotFound();
             }
             PopulateCategories(recette.CategoryId);
-            PopulateTypes(recette.TypeId);
             PopulateSaisons(recette.SaisonId);
             return View(recette);
         }
@@ -190,26 +187,39 @@ namespace Cuillere.Controllers
                 }
             }
             PopulateCategories(recetteToUpdate.CategoryId);
-            PopulateTypes(recetteToUpdate.TypeId);
             PopulateSaisons(recetteToUpdate.SaisonId);
             return View(recetteToUpdate);
         }
 
+        //Créer la liste des catégories
         private void PopulateCategories(object selectedCategory = null)
         {
             var categoriesQuery = from c in db.Categories
                               orderby c.Name
                               select c;
             ViewBag.CategoryId = new SelectList(categoriesQuery, "CategoryId", "Name", selectedCategory);
-        }
-        private void PopulateTypes(object selectedType = null)
-        {
-            var typesQuery = from t in db.Types
-                                  orderby t.Name
-                                  select t;
-            ViewBag.TypeId = new SelectList(typesQuery, "TypeId", "Name", selectedType);
-        }
 
+        }
+        //Liste déroulante en cascade, permet de récupérer les types si la catégorie est Entrées ou Viandes
+        //fonction avec JS/Ajax (_layout)
+        [HttpPost]
+        public ActionResult GetTypes(string catId)
+        {
+            int categoryId;
+            List<SelectListItem> typeRequired = new List<SelectListItem>();
+            if (!string.IsNullOrEmpty(catId))
+            {
+                categoryId = Convert.ToInt32(catId);
+                List<Models.Type> types = db.Types.Where(x => x.CategoryId == categoryId).ToList();
+                types.ForEach(x =>
+                {
+                    typeRequired.Add(new SelectListItem { Text = x.Name, Value = x.TypeId.ToString() });
+                });
+            }
+            return Json(typeRequired, JsonRequestBehavior.AllowGet);
+
+        }
+       
         private void PopulateSaisons(object selectedSaison = null)
         {
             var saisonsQuery = from s in db.Saisons

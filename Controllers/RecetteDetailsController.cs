@@ -81,7 +81,7 @@ namespace Cuillere.Controllers
                 ingre = new Ingredient()
                 {
                     Name = Ingredient_Name,
-                    RayonId = 11
+                    RayonId = 5
                 };
                 if (ModelState.IsValid)
                 {
