@@ -1,18 +1,34 @@
-﻿@{
+﻿@model IEnumerable<Cuillere.Models.Recette>
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-xs-12 col-md-3">
         @Html.Partial("_CatMenu")
     </div>
-    <div class="col-md-5">
-        <a href="~/Recettes/Index">
-            <h3>Toutes les recettes</h3>
-            <img src="~/Content/Images/recettes.jpg" alt="" />
-        </a>
+    <div class="col-xs-12 col-md-9">
+        <div class="row">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-xs-12 col-md-3">
+                    <div class="thumbnail">
+                        <div class="caption text-center">
+                            <p>@Html.DisplayFor(modelItem => item.Name)</p>
+                            <hr />
+                            <p>@Html.ActionLink("Voir", "Details", "Recettes", new { id = item.RecetteId }, new { @class = "btn btn-info" })</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
     </div>
 </div>
+
+
+
 
     
 

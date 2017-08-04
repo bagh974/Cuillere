@@ -12,7 +12,8 @@ namespace Cuillere.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
-            return View();
+            var recettes = db.Recettes;
+            return View(recettes.ToList());
         }
 
         public ActionResult About()
