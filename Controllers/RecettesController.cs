@@ -34,7 +34,9 @@ namespace Cuillere.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
-            var recettes = db.Recettes.Include(r => r.Category).Include(r => r.Saison);
+            var recettes = db.Recettes.Include(r => r.Category)
+                                      .Include(r => r.Type)
+                                      .Include(r => r.Saison);
 
             //Recherche sur recette, saison ou catégorie
             if (!String.IsNullOrEmpty(searchString))
@@ -107,7 +109,7 @@ namespace Cuillere.Controllers
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RecetteId,Name,CategoryId,TypeId,SaisonId")] Recette recette)
+        public ActionResult Create([Bind(Include = "RecetteId,Name,PReparation,CategoryId,TypeId,SaisonId")] Recette recette)
         {
             try
             {

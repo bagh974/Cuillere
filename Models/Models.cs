@@ -57,6 +57,7 @@ namespace Cuillere.Models
         [Display(Name = "Recette")]
         [StringLength(32, MinimumLength = 4)]
         public string Name { get; set; }
+        public string Preparation { get; set; }
         [Display(Name = "Catégorie")]
         public int CategoryId { get; set; }
         [Display(Name = "Type")]
