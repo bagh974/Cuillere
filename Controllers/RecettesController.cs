@@ -109,8 +109,10 @@ namespace Cuillere.Controllers
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RecetteId,Name,PReparation,CategoryId,TypeId,SaisonId")] Recette recette)
+        public ActionResult Create([Bind(Include = "RecetteId,Name,PReparation,CategoryId,TypeId,SaisonId")] Recette recette, string Type_Name)
         {
+            var typeRecette = db.Types.SingleOrDefault(i => i.Name == Type_Name);
+            recette.TypeId = typeRecette.TypeId;
             try
             {
                 if (ModelState.IsValid)
@@ -166,13 +168,15 @@ namespace Cuillere.Controllers
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
+        public ActionResult EditPost(int? id, string Type_Name)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var recetteToUpdate = db.Recettes.Find(id);
+            var typeRecette = db.Types.SingleOrDefault(i => i.Name == Type_Name);
+            recetteToUpdate.TypeId = typeRecette.TypeId;
             if (TryUpdateModel(recetteToUpdate, "",
                new string[] { "Name", "CategoryId", "TypeId", "SaisonId" }))
             {
@@ -204,24 +208,35 @@ namespace Cuillere.Controllers
         }
         //Liste déroulante en cascade, permet de récupérer les types si la catégorie est Entrées ou Viandes
         //fonction avec JS/Ajax (_layout)
-        [HttpPost]
-        public ActionResult GetTypes(string catId)
-        {
-            int categoryId;
-            List<SelectListItem> typeRequired = new List<SelectListItem>();
-            if (!string.IsNullOrEmpty(catId))
-            {
-                categoryId = Convert.ToInt32(catId);
-                List<Models.Type> types = db.Types.Where(x => x.CategoryId == categoryId).ToList();
-                types.ForEach(x =>
-                {
-                    typeRequired.Add(new SelectListItem { Text = x.Name, Value = x.TypeId.ToString() });
-                });
-            }
-            return Json(typeRequired, JsonRequestBehavior.AllowGet);
+        //ne récupère pas l'ID du type
+        //[HttpPost]
+        //public ActionResult GetTypes(string catId)
+        //{
+        //    int categoryId;
+        //    List<SelectListItem> typeRequired = new List<SelectListItem>();
+        //    if (!string.IsNullOrEmpty(catId))
+        //    {
+        //        categoryId = Convert.ToInt32(catId);
+        //        List<Models.Type> types = db.Types.Where(x => x.CategoryId == categoryId).ToList();
+        //        types.ForEach(x =>
+        //        {
+        //            typeRequired.Add(new SelectListItem { Text = x.Name, Value = x.TypeId.ToString() });
+        //        });
+        //    }
+        //    return Json(typeRequired, JsonRequestBehavior.AllowGet);
 
+        //}
+        //Autocomplétion pour les types
+        public JsonResult GetTypes(string term = "")
+        {
+            var objTypelist = db.Types
+                            .Where(i => i.Name.ToUpper()
+                            .Contains(term.ToUpper()))
+                            .Select(i => new { Name = i.Name, ID = i.TypeId })
+                            .Distinct().ToList();
+            return Json(objTypelist, JsonRequestBehavior.AllowGet);
         }
-       
+
         private void PopulateSaisons(object selectedSaison = null)
         {
             var saisonsQuery = from s in db.Saisons

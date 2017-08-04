@@ -29,6 +29,37 @@ $(document).ready(function () {
     });
 });
 
+//Auto-completion de la liste des types
+$(document).ready(function () {
+    $("#Type_Name").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetTypes", "Recettes")',
+                datatype: "json",
+                data: {
+                    term: request.term
+                },
+                success: function (data) {
+                    response($.map(data, function (val, item) {
+                        return {
+                            label: val.Name,
+                            value: val.Name,
+                            IngredientId: val.ID
+                        };
+                    }));
+                },
+                error: function (response) {
+                    alert(alert(response.responseText));
+                }
+            });
+        },
+        select: function (event, ui) {
+            $("#Type_Name").val(ui.item.TypeId);
+            $("#TypeId").val(ui.item.TypeId);
+        }
+    });
+});
+
 //Suppression des ingrédients de la liste de courses
 $(document).ready(function () {
     $(".RemoveLink").click(function (e) {

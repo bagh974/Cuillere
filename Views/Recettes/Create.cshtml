@@ -31,11 +31,19 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             <label class="control-label col-md-2" for="TypeId">Type</label>
             <div class="col-md-10" id="Type">
                 @Html.DropDownListFor(model => model.TypeId, new List<SelectListItem>(), "--Select--", htmlAttributes: new {@id = "listType", @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type.Name, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Type.Name, new { htmlAttributes = new { Name = "Type_Name", @class = "form-control" } })
+                @Html.HiddenFor(model => Model.Type.Name, new { Value = "" })
+                @Html.ValidationMessageFor(model => model.Type.Name, "", new { @class = "text-danger" })
             </div>
         </div>
             
