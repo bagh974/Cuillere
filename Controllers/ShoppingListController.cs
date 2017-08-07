@@ -76,5 +76,15 @@ namespace Cuillere.Controllers
 
             return PartialView("shoppinglist", viewModel);
         }
+        public ActionResult listToPrint()
+        {
+            var cart = ShoppingList.GetCart(this.HttpContext);
+            var viewModel = new ShoppingCartViewModel
+            {
+                CartItems = cart.GetCartItems()
+            };
+
+            return View(viewModel);
+        }
     }
 }

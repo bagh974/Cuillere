@@ -2,7 +2,7 @@
 @model Recette
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Details de recette";
 }
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>
@@ -40,10 +40,10 @@
                 <td>@i.Quantity</td>
                 <td>@i.unite</td>
                 <td>
-                    @Html.ActionLink("Ajouter", "AddToCart", "ShoppingList", new { id = i.RecetteDetailId }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Acheter", "AddToCart", "ShoppingList", new { id = i.RecetteDetailId}, new { @class = "btn btn-info", @title = "Ajouter à la liste de course" })
                 </td>
                 <td>
-                    @Html.ActionLink("Supprimer", "Delete", "RecetteDetails", new { id = i.RecetteDetailId }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Supprimer", "Delete", "RecetteDetails", new { id = i.RecetteDetailId}, new { @class = "btn btn-info", @title = "Supprimer de la recette" })
                 </td>
             </tr>
         }
@@ -53,8 +53,8 @@
 </div>
 
 <p>
-    @Html.ActionLink("Ajouter", "Add", new { id = Model.RecetteId }) |
-    @Html.ActionLink("Retour", "Index")
+    @Html.ActionLink("Nouvel ingrédient", "Add", new { id = Model.RecetteId }, new { @title = "Ajouter un ingrédient à la recette" }) |
+    @Html.ActionLink("Retour", "Index", "Home")
 </p>
 <style type="text/css">
     td {

@@ -5,9 +5,17 @@
 @{
     ViewBag.Title = "Mes recettes";
 }
+<h2>Gestion des recettes</h2>
 
-<h2>Mes recettes</h2>
-
+<p>Liste de toutes les recettes enregistrées. Actions possibles:
+    <ul>
+        <li>Rechercher une recette par mot-clé</li>
+        <li>Ajouter une nouvelle recette</li>
+        <li>Renommer et/ou reclasser une recette existante</li>
+        <li>Consulter une recette, ajout un ingrédient à la liste de courses ou ajouter un nouvel ingrédient</li>
+        <li>Supprimer une recette</li>
+    </ul>
+</p>
 <p>
     @Html.ActionLink("Nouvelle recette", "Create")
 </p>

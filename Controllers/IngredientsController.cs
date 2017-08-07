@@ -19,6 +19,7 @@ namespace Cuillere.Controllers
         public ActionResult Index()
         {
             var ingredients = db.Ingredients.Include(i => i.Rayon);
+            ingredients = ingredients.OrderBy(i => i.Rayon.Name);
             return View(ingredients.ToList());
         }
 

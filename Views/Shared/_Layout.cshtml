@@ -26,6 +26,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
                     <li>@Html.ActionLink("Mes recettes", "Index", "Recettes")</li>
+                    <li>@Html.ActionLink("Mes ingrédients", "Index", "Ingredients")</li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -38,17 +39,29 @@
     </div>
     <div class="container body-content">
         <div class="row">
+            <div class="row">
+                <div class="col-xs-12 col-md-3">
+                    <!-- Menu catégorie, col1 -->
+                    @if(ViewBag.Title != "Imprimer")
+                    {
+                        @Html.Partial("_CatMenu");
+                    }
+                </div>
 
-                @RenderBody()
-
-            @*<div class="col-md-3">
-                @if (ViewBag.Title != "Ma liste de courses")
-                {
-                    {Html.RenderAction("ShoppingList", "ShoppingList");}
-                }
-            </div>*@
+                <div class="col-xs-12 col-md-6">
+                    <!-- Contenu, col2 -->
+                    @RenderBody()
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <!-- Liste de course, col3 -->
+                    @if (ViewBag.Title != "Ma liste de courses" && ViewBag.Title != "Imprimer")
+                    {
+                        { Html.RenderAction("ShoppingList", "ShoppingList"); }
+                    }
+                </div>
+            </div>
         </div>
- <hr />
+    <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Bagh</p>
         </footer>
@@ -63,113 +76,89 @@
         //Auto-completion de la liste des ingrédients
 $(document).ready(function () {
     $("#Ingredient_Name").autocomplete({
-        source: function (request, response) {
+                                    source: function (request, response) {
             $.ajax({
-                url: '@Url.Action("GetIngredient", "RecetteDetails")',
+                                            url: '@Url.Action("GetIngredient", "RecetteDetails")',
                 datatype: "json",
                 data: {
-                    term: request.term
+                                                term: request.term
                 },
                 success: function (data) {
-                    response($.map(data, function (val, item) {
-                        return {
-                            label: val.Name,
+                                                response($.map(data, function (val, item) {
+                                                    return {
+                                                        label: val.Name,
                             value: val.Name,
                             IngredientId: val.ID
-                        };
-                    }));
-                },
+                                                    };
+                                                }));
+                                            },
                 error: function (response) {
-                    alert(alert(response.responseText));
-                }
-            });
-        },
+                                                alert(alert(response.responseText));
+                                            }
+                                        });
+                                    },
         select: function (event, ui) {
             $("#Ingredient_Name").val(ui.item.IngredientId);
             $("#IngredientId").val(ui.item.IngredientId);
-        }
-    });
+                        }
+                        });
 });
 
 //Auto-completion de la liste des types
 $(document).ready(function () {
     $("#Type_Name").autocomplete({
-        source: function (request, response) {
+                            source: function (request, response) {
             $.ajax({
-                url: '@Url.Action("GetTypes", "Recettes")',
+                                    url: '@Url.Action("GetTypes", "Recettes")',
                 datatype: "json",
                 data: {
-                    term: request.term
+                                        term: request.term
                 },
                 success: function (data) {
-                    response($.map(data, function (val, item) {
-                        return {
-                            label: val.Name,
+                                        response($.map(data, function (val, item) {
+                                            return {
+                                                label: val.Name,
                             value: val.Name,
                             IngredientId: val.ID
-                        };
-                    }));
-                },
+                                            };
+                                        }));
+                                    },
                 error: function (response) {
-                    alert(alert(response.responseText));
-                }
-            });
-        },
+                                        alert(alert(response.responseText));
+                                    }
+                                });
+                            },
         select: function (event, ui) {
             $("#Type_Name").val(ui.item.TypeId);
             $("#TypeId").val(ui.item.TypeId);
-        }
-    });
-});
+                            }
+                        });
+                    });
 
 //Suppression des ingrédients de la liste de courses
 $(document).ready(function () {
     $(".RemoveLink").click(function (e) {
-        e.preventDefault();
-        // Get the id from the link
-        var recordToDelete = $(this).attr("data-id");
-        if (recordToDelete !== '') {
+                            e.preventDefault();
+                            // Get the id from the link
+                            var recordToDelete = $(this).attr("data-id");
+                            if (recordToDelete !== '') {
             // Perform the ajax post
             $.post("/ShoppingList/RemoveFromCart", { "id": recordToDelete },
                 function (data) {
-                    // Successful requests get here
-                    // Update the page elements
-                    if (data.ItemCount === 0) {
+                                    // Successful requests get here
+                                    // Update the page elements
+                                    if (data.ItemCount === 0) {
                         $('#row-' + data.DeleteId).fadeOut('slow');
-                    } else {
+                                    } else {
                         $('#item-count-' + data.DeleteId).text(data.ItemCount);
-                    }
+                                    }
                     $('#cart-total').text(data.CartTotal);
                     $('#update-message').text(data.Message);
                     $('#cart-status').text('Cart (' + data.CartCount + ')');
-                });
-        }
-    });
-});
-
-//Listes déroulantes en cascade (types pour les catégories Entrées et Viandes)
-$(document).ready(function () {
-    $('#listCat').change(function () {
-
-        //alert('j\'entre dans la fonction!');
-        $.ajax({
-            type: "post",
-            url: "/Recettes/GetTypes",
-            data: { catId: $('#listCat').val() },
-            datatype: "json",
-            traditional: true,
-            success: function (data) {
-                var typeRequest = "<select class ='form-control' id='listType' name='TypeId'>";
-                typeRequest = typeRequest + '<option value="">--Select--</option>';
-                for (var i = 0; i < data.length; i++) {
-                    typeRequest = typeRequest + '<option value=' + data[i].Value + '>' + data[i].Text + '</option>';
-                }
-                typeRequest = typeRequest + '</select><span class="field-valisation-valid text-danger" data-valmsg-for="TypeId" data-valmsg-replace="true"></span>';
-                $('#Type').html(typeRequest);
-            }
-        });
-    });
-});
+                                });
+                            }
+                        });
+                    });
     </script>
 
 </body>

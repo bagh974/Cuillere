@@ -2,7 +2,7 @@
 @model Recette
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Modifier une recette";
 }
 
 <h2>Edit</h2>
@@ -15,12 +15,12 @@
         <h4>Recette</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.RecetteId, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DisplayFor(model => model.RecetteId)
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -64,5 +64,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Retour", "Index", "Home")
 </div>

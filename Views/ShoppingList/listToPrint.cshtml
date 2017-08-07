@@ -1,0 +1,29 @@
+﻿@model Cuillere.ViewModels.ShoppingCartViewModel
+@{
+    ViewBag.Title = "Imprimer";
+}
+<h5 class="text-center">
+    <span><img src="~/Content/Images/shoping_cart.png" />Ma liste de courses:</span>
+</h5>
+@{
+    var rayons = Model.CartItems.GroupBy(r => r.Ingredient.Rayon.Name)
+                                .Select(r => new { Rayon = r.Key, Ingredient = r });
+}
+@foreach (var r in rayons)
+{
+    <h3>@r.Rayon</h3>
+    <ul>
+        @foreach (var ingre in r.Ingredient)
+        {
+            <li>@ingre.Ingredient.Name @ingre.Count @ingre.unite</li>
+        }
+    </ul>
+}
+<a href="javascript:window.print()" class="btn">Imprimer</a>
+    
+
+
+
+    
+
+

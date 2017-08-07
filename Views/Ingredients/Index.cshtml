@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Cuillere.Models.Ingredient>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Les ingrédients";
 }
 
-<h2>Index</h2>
+<h2>Les ingrédients</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -31,7 +31,7 @@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.IngredientId }) |
             @Html.ActionLink("Details", "Details", new { id=item.IngredientId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IngredientId })
+            @Html.ActionLink("Supprimer", "Delete", new { id=item.IngredientId })
         </td>
     </tr>
 }

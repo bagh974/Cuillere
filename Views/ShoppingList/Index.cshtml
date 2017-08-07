@@ -52,8 +52,9 @@ else
     </table>
 }
         <p class="button">
-            <a href="javascript:void(0);" onclick="history.go(-1);">Poursuivre</a>
+            @Html.ActionLink("Poursuivre", "Index", "Home")
         </p>
-        @*}*@
+            @Html.ActionLink("Imprimer", "listToPrint", null, new { target = "_blank" }, new { @class = "btn btn-info" })
+
 
 

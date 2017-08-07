@@ -395,6 +395,7 @@
     <Content Include="Views\Types\Delete.cshtml" />
     <Content Include="Views\Types\Edit.cshtml" />
     <Content Include="Views\Types\Index.cshtml" />
+    <Content Include="Views\ShoppingList\listToPrint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
