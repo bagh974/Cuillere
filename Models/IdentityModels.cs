@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
+using System.Data.Entity.Infrastructure;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
+using MySql.Data.MySqlClient;
 
 namespace Cuillere.Models
 {
@@ -23,14 +21,34 @@ namespace Cuillere.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+        //public ApplicationDbContext(string dbName) : base(GetConnectionString(dbName))
+        //{
+        //}
+
+        public ApplicationDbContext() : base("mysqlCon")
         {
         }
+
+        //public static string GetConnectionString(string dbName)
+        //{
+        //    // Server=localhost;Database={0};Uid=username;Pwd=password
+        //    var connString =
+        //        ConfigurationManager.ConnectionStrings["mysqlCon"].ConnectionString.ToString();
+
+        //    return String.Format(connString, dbName);
+        //}
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        public class MigrationsContextFactory : IDbContextFactory<ApplicationDbContext>
+        {
+            public ApplicationDbContext Create()
+            {
+                return new ApplicationDbContext();
+            }
         }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Rayon> Rayons { get; set; }
